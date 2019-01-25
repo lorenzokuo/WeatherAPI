@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>WeatherAPI</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+         <!-- Compiled and minified CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+        <!-- Compiled and minified JavaScript -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+        <!--Import Google Icon Font-->
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <script>
+            $(document).ready(function() {
+                $('form').submit(function() {
+                    var city = $('#city').val();
+                    // your code here (build up your url)
+                    var url = "http://api.openweathermap.org/data/2.5/weather?q="+city+"&APPID=315f43e7dfafeeb12bfd667d7329edd6";
+                    console.log("check city: "+city);
+                    console.log("check url: "+url);
+                    // validation
+                    if (city == ""){
+                        console.log("input empty");
+                        var error = "Please type your city!"
+                        $('.error_text').append(error);
+                    } else {
+                        $('.error_text').empty();
+                    };
+                    $.get(url, function(res) {
+                        // your code here
+                        console.log(res);
+                        console.log(res.main.temp);
+                        console.log(res.name);
+                        var temp = ((res.main.temp) * (9/5) - 459.67).toFixed(2);
+                        var name = res.name;
+                        var weather = res.weather[0].main;
+                        var desc = res.weather[0].description;
+                        console.log(weather);
+                        var htmlString = "<h1>"+name+"</h1><p>Teprateure: "+temp+"F&deg</p><p>Weather: "+weather+", "+desc+"</p>";
+                        $('.output').append(htmlString);
+                    }, 'json');
+                    // don't forget to return false so the page doesn't refresh
+                    return false;
+                });
+            });
+        </script>
+        <style>
+            .error_text {
+                color: red;
+                font-size: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <h2>Weather Forecast</h2>
+            </div>
+            <div class="row">
+                <form>
+                <div class="col s6">
+                    <input placeholder="Find city" type="text" id="city" name="">
+                </div>
+                <div class="col s6">
+                    <button class="btn waves-effect waves-light" type="submit" name="action">
+                        Search Weather<i class="material-icons left">cloud</i>
+                    </button>
+                </div>
+                </form>
+            </div>
+            <div class="error_text"></div>
+            <blockquote>
+                <div class="output"></div>
+            </blockquote>
+        </div>
+    </body>
+</html>
